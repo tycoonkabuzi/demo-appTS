@@ -1,31 +1,32 @@
 import styled from "styled-components";
-
-const Main = styled.div`
-  text-align: left;
-  width: 60%;
-  margin: auto;
-`;
+import { PropType } from "../types/typePosts";
+import { Link } from "react-router";
+const Main = styled.div``;
 const Title = styled.h2``;
-const Content = styled.p``;
-const ContainerPosts = styled.div`
-  background-color: #f7f7f7;
-  padding: 20px;
-  margin-bottom: 20px;
-  border: 1px solid #ededed;
+const ListContainer = styled.ol`
+  text-align: left;
 `;
-const PostList = ({ data }) => {
+//const Content = styled.p``;
+// const ContainerPosts = styled.div`
+//   background-color: #f7f7f7;
+//   padding: 20px;
+//   margin-bottom: 20px;
+//   border: 1px solid #ededed;
+// `;
+const PostList = ({ data }: PropType) => {
   return (
     <Main>
-      {data ? (
-        data.map((post) => (
-          <ContainerPosts>
-            <Title> {post.title}</Title>
-            <Content> {post.body}</Content>
-          </ContainerPosts>
-        ))
-      ) : (
-        <p> Loading </p>
-      )}
+      <ListContainer>
+        {data ? (
+          data.map((post) => (
+            <li key={post.id}>
+              <Link to={"/post/1"}> {post.title}</Link>
+            </li>
+          ))
+        ) : (
+          <p> Loading </p>
+        )}
+      </ListContainer>
     </Main>
   );
 };
