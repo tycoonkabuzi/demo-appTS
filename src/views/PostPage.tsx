@@ -4,12 +4,17 @@ import styled from "styled-components";
 import PostList from "../components/PostList";
 import Pagination from "../components/Pagination";
 import { PostListType } from "../types/typePosts";
+import { useNavigate } from "react-router";
 const Main = styled.div``;
 const Header = styled.h1``;
+const Back = styled.button`
+  float: left;
+`;
 const PostPage = () => {
   const [dataPerPage, setDataPerPage] = useState([]);
   const [allData, setAllData] = useState([]);
   const [selectedPage, setSelectedPage] = useState(0);
+  const navigation = useNavigate();
   useEffect(() => {
     axios
       .get(
@@ -30,7 +35,7 @@ const PostPage = () => {
     numberPages: number
   ): number[] => {
     let newArray: number[] = [];
-    for (let i = 1; i <= rawData.length / numberPages; i++) {
+    for (let i = 1; i < rawData.length / numberPages; i++) {
       newArray.push(i);
     }
     return newArray;
@@ -42,6 +47,7 @@ const PostPage = () => {
   };
   return (
     <Main>
+      <Back onClick={() => navigation("/")}>Back</Back>
       <Header> Post Lists</Header>
       <PostList data={dataPerPage} />
       <hr />

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useSearchParams } from "react-router";
 import styled from "styled-components";
 
@@ -21,20 +22,24 @@ const Pagination = ({
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedPage = searchParams.get("_start");
+
+  useEffect(() => {
+    if (selectedPage !== null) {
+      getSelectedPage(parseInt(selectedPage));
+    }
+  }, [selectedPage]);
   return (
     <Main>
       {pagesNumber.map((number) => (
         <Page
           onClick={() => {
             setSearchParams({
-              _start: `${number}`,
+              _start: `${number * 10}`,
               limit: `${pagesNumber.length}`,
             });
-            getSelectedPage(selectedPage);
           }}
           key={number}
         >
-          {" "}
           {number}
         </Page>
       ))}
