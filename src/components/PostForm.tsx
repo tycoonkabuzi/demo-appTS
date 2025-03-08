@@ -1,5 +1,8 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import { NewData, PropNewData } from "../types/addEditPost";
+import { useLocation, useNavigate } from "react-router";
+import axios from "axios";
 
 const Main = styled.div``;
 const ContainerForm = styled.form`
@@ -16,13 +19,17 @@ const InputTitle = styled.input`
 const InputContent = styled.textarea`
   height: 200px;
 `;
-const PostForm = ({ getNewData }) => {
-  const [newData, setNewData] = useState({ title: "", content: "" });
-  const handleChange = (e) => {
+
+const PostForm = ({ getNewData }: PropNewData) => {
+  const location = useLocation();
+  const [newData, setNewData] = useState<NewData>(location.state);
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const name = e.target.name;
     setNewData((prev) => ({ ...prev, [name]: e.target.value }));
   };
-
+  const navigate = useNavigate();
   return (
     <Main>
       <h1>Add Post</h1>
@@ -32,25 +39,46 @@ const PostForm = ({ getNewData }) => {
           onChange={handleChange}
           type="text"
           placeholder="Title"
-          value={newData.title}
+          value={newData?.title}
         />
         <InputContent
-          name="content"
+          name="body"
           onChange={handleChange}
           placeholder="Content"
-          value={newData.content}
+          value={newData?.body}
         />
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            getNewData(newData);
-            setNewData({ title: "", content: "" });
-          }}
-        >
-          Submit
-        </button>
+        {location.state ? (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              try {
+                axios.put(
+                  `https://jsonplaceholder.typicode.com/posts/${location.state?.id}`,
+                  newData
+                );
+                alert("Successfully updated");
+                navigate("/posts");
+              } catch (err) {
+                console.error(err);
+              }
+            }}
+          >
+            Edit
+          </button>
+        ) : (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              getNewData(newData);
+              setNewData({ title: "", body: "" });
+            }}
+          >
+            Submit
+          </button>
+        )}
       </ContainerForm>
     </Main>
   );
 };
+
 export default PostForm;

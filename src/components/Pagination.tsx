@@ -35,7 +35,7 @@ const Pagination = ({
           onClick={() => {
             setSearchParams({
               _start: `${number * 10}`,
-              limit: `${pagesNumber.length}`,
+              limit: `${pagesNumber.length + 1}`,
             });
           }}
           key={number}
